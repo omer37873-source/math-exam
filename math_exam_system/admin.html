@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>لوحة إدارة المعلم — اختبارات الصف السادس</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--blue:#185FA5;--blue-l:#E6F1FB;--blue-d:#042C53;--teal:#1D9E75;--teal-l:#E1F5EE;--teal-d:#085041;--red:#A32D2D;--red-l:#FCEBEB;--amber:#BA7517;--amber-l:#FAEEDA;--border:#e2e4e8}
+  body{font-family:'Cairo',Arial,sans-serif;background:#f5f6f8;color:#1a1a2e}
+  .topbar{background:var(--blue-d);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:12px}
+  .topbar h1{font-size:16px;font-weight:600}
+  .tabs{display:flex;gap:0;background:#fff;border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:0;z-index:50}
+  .tab{padding:14px 20px;font-size:13px;font-weight:500;cursor:pointer;color:#666;border-bottom:3px solid transparent;transition:.15s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
+  .tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+  .panel{display:none;max-width:900px;margin:0 auto;padding:24px 16px}.panel.active{display:block}
+  .card{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid var(--border)}
+  .card h3{font-size:15px;font-weight:600;margin-bottom:14px;color:var(--blue-d)}
+  label{font-size:12px;color:#666;display:block;margin-bottom:4px}
+  input,select,textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafafa}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+  textarea{min-height:80px;resize:vertical}
+  .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .fr3{grid-template-columns:1fr 1fr 1fr}
+  .fr1{grid-template-columns:1fr}
+  .btn{padding:9px 18px;border-radius:8px;border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+  .btn-blue{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-blue:hover{background:var(--blue-d)}
+  .btn-teal{background:var(--teal);color:#fff;border-color:var(--teal)}.btn-teal:hover{background:var(--teal-d)}
+  .btn-ghost{background:transparent;color:#666}.btn-ghost:hover{background:#f0f0f0}
+  .btn-full{width:100%;justify-content:center}
+  .btn-sm{padding:5px 12px;font-size:12px}
+  .alert{padding:10px 14px;border-radius:8px;font-size:13px;margin:8px 0}
+  .ai{background:var(--blue-l);color:var(--blue-d);border-right:3px solid var(--blue)}
+  .as{background:var(--teal-l);color:var(--teal-d);border-right:3px solid var(--teal)}
+  .aw{background:var(--amber-l);color:var(--amber);border-right:3px solid var(--amber)}
+  .ar{background:var(--red-l);color:var(--red);border-right:3px solid var(--red)}
+  .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
+  .bg{background:var(--teal-l);color:var(--teal-d)}.ba{background:var(--amber-l);color:var(--amber)}.bb{background:var(--blue-l);color:var(--blue-d)}.br2{background:var(--red-l);color:var(--red)}
+  .q-item{background:#f8fafc;border-radius:9px;padding:12px;margin-bottom:8px;border-right:3px solid var(--teal);position:relative}
+  .xl-box{border:2px dashed var(--teal);border-radius:10px;padding:20px;background:var(--teal-l);text-align:center;cursor:pointer}.xl-box:hover{background:#c5e8da}
+  .xl-box input{display:none}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{background:#f8fafc;padding:8px 10px;text-align:right;font-weight:600;font-size:12px;color:#666;border-bottom:1px solid var(--border)}
+  td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+  .code-box{background:#1a1a2e;color:#a8d8a8;border-radius:10px;padding:16px;font-family:monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;word-break:break-all}
+  .step-num{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+  .step-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+  .step-body h4{font-size:14px;font-weight:600;margin-bottom:4px}
+  .step-body p{font-size:13px;color:#555;line-height:1.6}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .metric{background:#f8fafc;border-radius:9px;padding:14px;text-align:center}
+  .metric .val{font-size:24px;font-weight:700}
+  .metric .lbl{font-size:11px;color:#666;margin-top:2px}
+  .prog-w{height:8px;background:#eee;border-radius:4px;overflow:hidden;margin:3px 0}
+  .prog{height:100%;border-radius:4px}
+  @media(max-width:600px){.fr,.fr3,.metrics{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span style="font-size:28px">👨‍🏫</span>
+  <div>
+    <h1>لوحة إدارة المعلم — اختبارات الصف السادس</h1>
+    <div style="font-size:11px;opacity:.7">أنشئ الاختبار · أدر الطلاب · تابع النتائج</div>
+  </div>
+</div>
+
+<div style="display:flex;gap:0;background:#fff;border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:0;z-index:50;overflow-x:auto">
+  <button class="tab active" onclick="showTab('setup',this)">⚙️ الإعداد</button>
+  <button class="tab" onclick="showTab('students',this)">👥 الطلاب</button>
+  <button class="tab" onclick="showTab('questions',this)">📝 الأسئلة</button>
+  <button class="tab" onclick="showTab('publish',this)">🚀 النشر</button>
+  <button class="tab" onclick="showTab('results',this)">📊 النتائج</button>
+</div>
+
+<!-- ===== SETUP ===== -->
+<div id="tab-setup" class="panel active">
+  <div class="card">
+    <h3>⚙️ الإعداد الأولي</h3>
+    <div class="alert ai" style="margin-bottom:14px">🔑 هذه البيانات تبقى على جهازك فقط ولا تُرسل لأحد</div>
+    <div class="fr1 fr"><div><label>🔑 مفتاح Anthropic API (للتصحيح الذكي)</label>
+      <input id="api-key" type="password" placeholder="sk-ant-api03-..."/>
+      <p style="font-size:11px;color:#999;margin-top:4px">احصل عليه من <a href="https://console.anthropic.com" target="_blank" style="color:var(--blue)">console.anthropic.com</a> مجاناً</p>
+    </div></div>
+    <div class="fr1 fr"><div><label>📋 رابط Google Sheets Web App (لحفظ النتائج)</label>
+      <input id="sheet-url" type="text" placeholder="https://script.google.com/macros/s/.../exec"/>
+      <p style="font-size:11px;color:#999;margin-top:4px">اتبع تعليمات تبويب "النشر" للحصول على الرابط</p>
+    </div></div>
+    <div class="fr">
+      <div><label>اسم الاختبار</label><input id="exam-name" placeholder="اختبار الفصل الأول — المتباينات"/></div>
+      <div><label>مدة الاختبار (دقيقة)</label><input id="exam-dur" type="number" placeholder="30" min="5"/></div>
+    </div>
+    <div class="fr">
+      <div><label>الشعبة المستهدفة</label>
+        <select id="exam-cls">
+          <option value="all">جميع الشعب</option>
+          <option value="6-1">6-1 فقط</option>
+          <option value="6-2">6-2 فقط</option>
+          <option value="6-3">6-3 فقط</option>
+        </select>
+      </div>
+      <div><label>الدرجة الكاملة</label><input id="exam-marks" type="number" placeholder="20"/></div>
+    </div>
+    <button class="btn btn-teal" onclick="saveConfig()">💾 حفظ الإعدادات</button>
+    <div id="config-msg"></div>
+  </div>
+
+  <div class="card">
+    <h3>📖 دليل الإعداد السريع</h3>
+    <div class="step-row"><div class="step-num">1</div><div class="step-body">
+      <h4>أضف بيانات الطلاب</h4>
+      <p>انتقل لتبويب "الطلاب" وارفع ملف Excel أو أضفهم يدوياً للشعب الثلاث</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-body">
+      <h4>أضف الأسئلة</h4>
+      <p>انتقل لتبويب "الأسئلة" واكتب أسئلتك أو الصق JSON المُولّد من Claude</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-body">
+      <h4>انشر الموقع</h4>
+      <p>انتقل لتبويب "النشر" واتبع الخطوات لرفع الملفات على Netlify في 5 دقائق</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-body">
+      <h4>أرسل الرابط للطلاب</h4>
+      <p>الطلاب يفتحون الرابط من أي جهاز ويدخلون برقمهم وكلمة مرورهم</p>
+    </div></div>
+  </div>
+</div>
+
+<!-- ===== STUDENTS ===== -->
+<div id="tab-students" class="panel">
+  <div class="card">
+    <h3>📊 استيراد من Excel</h3>
+    <div class="xl-box" onclick="document.getElementById('xlf').click()">
+      <input type="file" id="xlf" accept=".xlsx,.xls,.csv" onchange="importExcel(this)"/>
+      <div style="font-size:32px;margin-bottom:6px">📊</div>
+      <div style="font-size:14px;font-weight:600">اضغط لرفع ملف Excel أو CSV</div>
+      <div style="font-size:11px;color:#666;margin-top:4px">أعمدة مطلوبة: رقم الطالب · اسم الطالب الكامل · كلمة المرور · الشعبة</div>
+    </div>
+    <div id="xl-result"></div>
+    <div class="alert ai" style="margin-top:8px">💡 حمّل <a href="#" onclick="downloadTemplate()" style="color:var(--blue);font-weight:600">قالب Excel الجاهز</a></div>
+    <div style="margin-top:10px">
+      <button class="btn btn-ghost btn-sm" onclick="demoStudents()">⚡ تعبئة تجريبية (36 لكل شعبة)</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>➕ إضافة طالب يدوياً</h3>
+    <div class="fr3 fr">
+      <div><label>الشعبة</label>
+        <select id="s-cls"><option value="6-1">6-1</option><option value="6-2">6-2</option><option value="6-3">6-3</option></select>
+      </div>
+      <div><label>رقم الطالب</label><input id="s-num" placeholder="ST1-01"/></div>
+      <div><label>الاسم الكامل</label><input id="s-name" placeholder="أحمد محمد"/></div>
+    </div>
+    <div class="fr">
+      <div><label>كلمة المرور</label><input id="s-pass" placeholder="pass123"/></div>
+      <div style="display:flex;align-items:flex-end"><button class="btn btn-teal btn-sm" onclick="addStudent()">➕ إضافة</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>👥 الطلاب المسجلون</h3>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn btn-ghost btn-sm active-tab" onclick="showClass('6-1',this)" id="ct-1">الشعبة 6-1 (<span id="c1-count">0</span>)</button>
+      <button class="btn btn-ghost btn-sm" onclick="showClass('6-2',this)" id="ct-2">الشعبة 6-2 (<span id="c2-count">0</span>)</button>
+      <button class="btn btn-ghost btn-sm" onclick="showClass('6-3',this)" id="ct-3">الشعبة 6-3 (<span id="c3-count">0</span>)</button>
+    </div>
+    <div id="students-table"></div>
+  </div>
+</div>
+
+<!-- ===== QUESTIONS ===== -->
+<div id="tab-questions" class="panel">
+  <div class="card">
+    <h3>📝 إضافة أسئلة</h3>
+    <div class="alert ai">💡 اذهب إلى محادثة Claude واطلب منه استخراج الأسئلة، ثم الصق JSON هنا</div>
+    <div class="fr1 fr"><div><label>الصق JSON الأسئلة هنا</label>
+      <textarea id="q-json" rows="8" placeholder='[
+  {"id":1,"text":"ما مساحة المثلث...","type":"اختيار من متعدد","marks":7,"correct_answer":"B","hint":"تلميح","explanation":"شرح"},
+  ...
+]'></textarea>
+    </div></div>
+    <div class="alert aw" style="margin-bottom:8px">⚠️ تأكد أن الأسئلة بصيغة JSON صحيحة قبل الحفظ</div>
+    <button class="btn btn-blue" onclick="parseQuestions()">✅ حفظ الأسئلة</button>
+    <div id="q-parse-msg"></div>
+  </div>
+
+  <div class="card">
+    <h3>📋 الأسئلة المحفوظة (<span id="q-total-count">0</span>)</h3>
+    <div id="q-list"><p style="color:#999;font-size:13px">لا توجد أسئلة بعد.</p></div>
+  </div>
+</div>
+
+<!-- ===== PUBLISH ===== -->
+<div id="tab-publish" class="panel">
+  <div class="card">
+    <h3>🚀 الخطوة 1 — توليد ملف البيانات</h3>
+    <p style="font-size:13px;color:#555;margin-bottom:12px">هذا الملف يحتوي على بيانات الطلاب والأسئلة. يُولَّد من إعداداتك ويُضاف لمجلد الموقع.</p>
+    <button class="btn btn-blue" onclick="generateDataFile()">⚙️ توليد exam-data.js</button>
+    <div id="data-file-preview" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h3>📥 الخطوة 2 — تحميل ملفات الموقع</h3>
+    <p style="font-size:13px;color:#555;margin-bottom:12px">حمّل المجلد الكامل على جهازك</p>
+    <button class="btn btn-teal" onclick="downloadAll()">📦 تحميل جميع الملفات (ZIP)</button>
+    <div class="alert ai" style="margin-top:10px">الملفات: index.html (صفحة الطالب) + admin.html (لوحتك) + exam-data.js (البيانات)</div>
+  </div>
+
+  <div class="card">
+    <h3>🌐 الخطوة 3 — النشر على Netlify (مجاني)</h3>
+    <div class="step-row"><div class="step-num">1</div><div class="step-body">
+      <h4>اذهب إلى <a href="https://netlify.com" target="_blank" style="color:var(--blue)">netlify.com</a></h4>
+      <p>أنشئ حساباً مجانياً بالبريد الإلكتروني أو Google</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-body">
+      <h4>اسحب وأفلت المجلد</h4>
+      <p>في صفحة Netlify الرئيسية، اسحب مجلد الموقع وأفلته في منطقة "Drop your site folder here"</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-body">
+      <h4>احصل على الرابط</h4>
+      <p>في ثوانٍ سيظهر رابط مثل <strong>wonderful-math-6.netlify.app</strong> — أرسله للطلاب!</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-body">
+      <h4>(اختياري) غيّر اسم الرابط</h4>
+      <p>من إعدادات Netlify ← Site settings ← Change site name → مثلاً: <strong>grade6-math-exam</strong></p>
+    </div></div>
+  </div>
+
+  <div class="card">
+    <h3>📋 الخطوة 4 — إعداد Google Sheets (لحفظ النتائج)</h3>
+    <div class="step-row"><div class="step-num">1</div><div class="step-body">
+      <h4>أنشئ Google Sheet جديد</h4>
+      <p>اذهب إلى <a href="https://sheets.google.com" target="_blank" style="color:var(--blue)">sheets.google.com</a> وأنشئ ورقة جديدة</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-body">
+      <h4>افتح محرر Apps Script</h4>
+      <p>من القائمة: Extensions ← Apps Script ← الصق الكود التالي:</p>
+    </div></div>
+    <div class="code-box" style="margin:8px 0;font-size:12px">function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    data.timestamp, data.name, data.num,
+    data.class, data.exam, data.score,
+    data.max, data.pct + '%'
+  ]);
+  return ContentService.createTextOutput('OK');
+}</div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-body">
+      <h4>انشر كـ Web App</h4>
+      <p>Deploy ← New deployment ← Web app ← Execute as: Me ← Who has access: Anyone ← Deploy</p>
+    </div></div>
+    <div class="step-row"><div class="step-num">4</div><div class="step-body">
+      <h4>انسخ الرابط</h4>
+      <p>انسخ رابط الـ Web App والصقه في حقل "رابط Google Sheets" في تبويب الإعداد</p>
+    </div></div>
+  </div>
+</div>
+
+<!-- ===== RESULTS ===== -->
+<div id="tab-results" class="panel">
+  <div class="metrics" id="rep-metrics">
+    <div class="metric"><div class="val" id="m-total">—</div><div class="lbl">مسجّلون</div></div>
+    <div class="metric"><div class="val" id="m-answered">—</div><div class="lbl">أجابوا</div></div>
+    <div class="metric"><div class="val" id="m-avg">—</div><div class="lbl">متوسط</div></div>
+    <div class="metric"><div class="val" id="m-pass">—</div><div class="lbl">نجاح</div></div>
+  </div>
+  <div class="card">
+    <h3>📋 كشف الدرجات</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn btn-teal btn-sm" onclick="exportResultsExcel()">📊 تصدير Excel</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportResultsJSON()">💾 تحميل JSON</button>
+      <button class="btn btn-ghost btn-sm" onclick="printResults()">🖨️ طباعة</button>
+    </div>
+    <div id="results-table"><p style="color:#999;font-size:13px">لا توجد نتائج بعد. النتائج تظهر هنا بعد تسليم الطلاب.</p></div>
+  </div>
+  <div class="card">
+    <h3>📉 أداء الأسئلة</h3>
+    <div id="q-perf"><p style="color:#999;font-size:13px">—</p></div>
+  </div>
+  <div class="card">
+    <h3>💾 استيراد نتائج محفوظة</h3>
+    <p style="font-size:13px;color:#555;margin-bottom:10px">إذا حفظت النتائج مسبقاً كـ JSON، الصقها هنا لعرضها</p>
+    <textarea id="results-import" placeholder='[{"studentName":"...","pct":85,...},...]' style="min-height:80px"></textarea>
+    <button class="btn btn-blue btn-sm" style="margin-top:8px" onclick="importResults()">📥 استيراد النتائج</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const DB = {
+  classes: {'6-1':[],'6-2':[],'6-3':[]},
+  questions: [],
+  results: [],
+  currentClass: '6-1',
+  config: {}
+};
+
+// Load from localStorage
+try {
+  const saved = localStorage.getItem('mathExamDB');
+  if (saved) { const d = JSON.parse(saved); Object.assign(DB, d); }
+} catch(e) {}
+
+function save() {
+  try { localStorage.setItem('mathExamDB', JSON.stringify(DB)); } catch(e) {}
+}
+
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='results') renderResults();
+  if(name==='students') { renderStudentsTable(); updateCounts(); }
+  if(name==='questions') renderQuestions();
+}
+
+function saveConfig() {
+  DB.config = {
+    apiKey: document.getElementById('api-key').value.trim(),
+    sheetUrl: document.getElementById('sheet-url').value.trim(),
+    examName: document.getElementById('exam-name').value.trim(),
+    examDur: parseInt(document.getElementById('exam-dur').value)||30,
+    examCls: document.getElementById('exam-cls').value,
+    examMarks: parseInt(document.getElementById('exam-marks').value)||20
+  };
+  save();
+  document.getElementById('config-msg').innerHTML='<div class="alert as" style="margin-top:8px">✅ تم حفظ الإعدادات</div>';
+}
+
+function importExcel(inp) {
+  const file=inp.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      let counts={'6-1':0,'6-2':0,'6-3':0}; let imported=0;
+      rows.forEach((row,i)=>{
+        const num=String(row['رقم الطالب']||row['student_id']||'').trim();
+        const name=String(row['اسم الطالب الكامل']||row['name']||row['الاسم']||'').trim();
+        const pass=String(row['كلمة المرور']||row['password']||'').trim();
+        const cls=String(row['الشعبة']||row['class']||'').trim();
+        if(!name||!['6-1','6-2','6-3'].includes(cls)) return;
+        if(DB.classes[cls].length>=36) return;
+        DB.classes[cls].push({id:num||`R${i}`,name,password:pass||num,num:num||`R${i}`});
+        counts[cls]++; imported++;
+      });
+      save(); updateCounts(); renderStudentsTable();
+      document.getElementById('xl-result').innerHTML=`<div class="alert as">✅ استيراد ${imported} طالب — 6-1: ${counts['6-1']} · 6-2: ${counts['6-2']} · 6-3: ${counts['6-3']}</div>`;
+    }catch(err){ document.getElementById('xl-result').innerHTML=`<div class="alert ar">❌ ${err.message}</div>`; }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function downloadTemplate() {
+  const rows=[['رقم الطالب','اسم الطالب الكامل','كلمة المرور','الشعبة','ملاحظات'],
+    ['ST1-01','أحمد محمد علي','ahmed123','6-1',''],['ST2-01','منى أحمد سعيد','mona456','6-2',''],['ST3-01','فهد سالم ناصر','fahad789','6-3','']];
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:14},{wch:24},{wch:14},{wch:8},{wch:16}];
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,'بيانات الطلاب',ws);
+  XLSX.writeFile(wb,'قالب_بيانات_الطلاب.xlsx');
+}
+
+function demoStudents() {
+  const n1=['أحمد محمد','سلطان راشد','فيصل عبدالله','خالد سعد','محمد علي','عبدالله خالد','نايف سالم','راشد جاسم','سعيد عمر','يوسف ناصر','إبراهيم حمد','بدر طارق','مازن رياض','وليد كريم','عمر صالح','ثامر سعود','حسن فهد','جاسم محمد','طارق عادل','حامد منصور','زياد إبراهيم','أنس عبدالرحمن','كريم جمال','مروان أحمد','رامي حسين','أمير محمود','نادر وليد','باسل مصطفى','تامر فادي','سامر رفيق','لؤي زياد','حسام شادي','بلال أيمن','وائل طارق','ياسر نادر','شادي لؤي'];
+  const n2=['منى أحمد','نورة سالم','فاطمة خالد','مريم محمد','أسماء عبدالله','هند جاسم','ريم طارق','دانة ناصر','لولوة سعيد','غادة فيصل','نجلاء راشد','هيفاء حمد','سارة بدر','ليلى مازن','رنا وليد','شيخة عمر','الجوهرة يوسف','بثينة إبراهيم','أميرة ثامر','شمس حسن','زينب جاسم','مها طارق','ولاء حامد','نسرين زياد','رهف أنس','إيمان كريم','لينا مروان','سلمى رامي','دينا أمير','مي نادر','جنى باسل','ندى تامر','أنوار سامر','سمر لؤي','تغريد حسام','شروق بلال'];
+  const n3=['فهد سالم','سعود محمد','تركي عبدالله','ماجد خالد','بندر سعد','نواف علي','مشعل عبدالله','رياض نايف','حمد سعيد','عبدالعزيز يوسف','فيصل إبراهيم','خالد بدر','محمد مازن','علي وليد','عبدالرحمن عمر','جاسم ثامر','طارق حسن','ناصر جاسم','منصور طارق','رفيق حامد','إبراهيم زياد','يوسف أنس','صالح كريم','حسين مروان','أحمد رامي','محمود أمير','عادل نادر','مصطفى باسل','فادي تامر','رفيع سامر','شادي لؤي2','أيمن حسام','زياد بلال','وليد وائل','باسم ياسر','قيس نادر'];
+  [n1,n2,n3].forEach((ns,i)=>{const cls=`6-${i+1}`;DB.classes[cls]=ns.map((name,j)=>({id:`ST${i+1}-${String(j+1).padStart(2,'0')}`,name,password:`pass${j+1}`,num:`ST${i+1}-${String(j+1).padStart(2,'0')}`}));});
+  save(); updateCounts(); renderStudentsTable();
+}
+
+function addStudent() {
+  const cls=document.getElementById('s-cls').value;
+  const num=document.getElementById('s-num').value.trim();
+  const name=document.getElementById('s-name').value.trim();
+  const pass=document.getElementById('s-pass').value.trim();
+  if(!name) return;
+  if(DB.classes[cls].length>=36) { alert('الحد الأقصى 36 طالباً'); return; }
+  DB.classes[cls].push({id:num||`M-${Date.now()}`,name,password:pass||num,num:num||`M-${Date.now()}`});
+  save(); updateCounts(); renderStudentsTable();
+  document.getElementById('s-name').value=''; document.getElementById('s-num').value=''; document.getElementById('s-pass').value='';
+}
+
+function updateCounts() {
+  ['6-1','6-2','6-3'].forEach((cls,i)=>document.getElementById(`c${i+1}-count`).textContent=DB.classes[cls].length);
+}
+
+function showClass(cls, el) {
+  DB.currentClass=cls;
+  document.querySelectorAll('#tab-students .btn-sm').forEach(b=>b.style.background='transparent');
+  el.style.background='var(--blue-l)';
+  renderStudentsTable();
+}
+
+function renderStudentsTable() {
+  const sts=DB.classes[DB.currentClass];
+  if(!sts.length){document.getElementById('students-table').innerHTML='<p style="color:#999;font-size:13px">لا يوجد طلاب في هذه الشعبة.</p>';return;}
+  document.getElementById('students-table').innerHTML=`<table>
+    <thead><tr><th>#</th><th>الاسم</th><th>الرقم</th><th>كلمة المرور</th><th></th></tr></thead>
+    <tbody>${sts.map((s,i)=>`<tr><td style="color:#999">${i+1}</td><td>${s.name}</td><td>${s.num}</td><td><span style="background:#f0f0f0;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px">${s.password}</span></td>
+    <td><button class="btn btn-ghost btn-sm" onclick="delStudent('${DB.currentClass}',${i})" style="color:var(--red)">حذف</button></td></tr>`).join('')}
+    </tbody></table>`;
+}
+
+function delStudent(cls, idx) { DB.classes[cls].splice(idx,1); save(); updateCounts(); renderStudentsTable(); }
+
+function parseQuestions() {
+  const raw=document.getElementById('q-json').value.trim();
+  try{
+    const qs=JSON.parse(raw);
+    DB.questions=qs; save(); renderQuestions();
+    document.getElementById('q-parse-msg').innerHTML=`<div class="alert as" style="margin-top:8px">✅ تم حفظ ${qs.length} سؤال</div>`;
+    document.getElementById('q-total-count').textContent=qs.length;
+  }catch(e){ document.getElementById('q-parse-msg').innerHTML=`<div class="alert ar" style="margin-top:8px">❌ JSON غير صحيح: ${e.message}</div>`; }
+}
+
+function renderQuestions() {
+  document.getElementById('q-total-count').textContent=DB.questions.length;
+  if(!DB.questions.length){document.getElementById('q-list').innerHTML='<p style="color:#999;font-size:13px">لا توجد أسئلة بعد.</p>';return;}
+  document.getElementById('q-list').innerHTML=DB.questions.map((q,i)=>`
+    <div class="q-item">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+        <span class="badge bb">س${i+1}</span><span class="badge ba">${q.marks} درجات</span>
+        ${q.type?`<span style="background:#e8e8e8;color:#444;padding:2px 8px;border-radius:20px;font-size:11px">${q.type}</span>`:''}
+      </div>
+      <div style="font-size:13px;margin-bottom:5px">${q.text.substring(0,100)}${q.text.length>100?'...':''}</div>
+      ${q.correct_answer?`<div style="font-size:12px;color:#666">✅ الإجابة: <strong>${q.correct_answer}</strong></div>`:''}
+    </div>`).join('');
+}
+
+function generateDataFile() {
+  const cfg=DB.config;
+  const content = `// exam-data.js — Auto-generated ${new Date().toLocaleString('ar')}
+window.ANTHROPIC_KEY = ${JSON.stringify(cfg.apiKey||'')};
+window.SHEET_URL = ${JSON.stringify(cfg.sheetUrl||'')};
+window.EXAM_DATA = ${JSON.stringify({
+    name: cfg.examName||'اختبار الرياضيات',
+    duration: cfg.examDur||30,
+    targetClass: cfg.examCls||'all',
+    totalMarks: cfg.examMarks||20,
+    questions: DB.questions
+  }, null, 2)};
+window.STUDENTS_DATA = ${JSON.stringify(DB.classes, null, 2)};`;
+  document.getElementById('data-file-preview').innerHTML=`<div class="code-box" style="max-height:200px;overflow-y:auto;font-size:11px">${content.replace(/</g,'&lt;')}</div>
+    <button class="btn btn-teal btn-sm" style="margin-top:8px" onclick="downloadDataFile()">📥 تحميل exam-data.js</button>`;
+  window._dataFileContent=content;
+}
+
+function downloadDataFile() {
+  if(!window._dataFileContent) { generateDataFile(); }
+  const blob=new Blob([window._dataFileContent],{type:'text/javascript'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='exam-data.js'; a.click();
+}
+
+async function downloadAll() {
+  generateDataFile();
+  const JSZip = await import('https://esm.sh/jszip@3.10.1');
+  const zip = new JSZip.default();
+  const [indexHTML, adminHTML] = await Promise.all([
+    fetch('index.html').then(r=>r.ok?r.text():null).catch(()=>null),
+    fetch('admin.html').then(r=>r.ok?r.text():null).catch(()=>null)
+  ]);
+  if(indexHTML) zip.file('index.html', indexHTML);
+  if(adminHTML) zip.file('admin.html', adminHTML);
+  zip.file('exam-data.js', window._dataFileContent||'// generate first');
+  const blob = await zip.generateAsync({type:'blob'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='math_exam_site.zip'; a.click();
+}
+
+function renderResults() {
+  const recs=DB.results;
+  const allStu=Object.values(DB.classes).flat();
+  const pcts=recs.map(r=>r.pct);
+  const avg=pcts.length?Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length):null;
+  const pass=pcts.filter(p=>p>=60).length;
+  document.getElementById('m-total').textContent=allStu.length||'—';
+  document.getElementById('m-answered').textContent=recs.length||'—';
+  document.getElementById('m-avg').textContent=avg!=null?avg+'%':'—';
+  document.getElementById('m-pass').textContent=pcts.length?Math.round(pass/pcts.length*100)+'%':'—';
+  if(!recs.length) return;
+  const rows=recs.map(r=>{
+    const gr=r.pct>=90?'ممتاز':r.pct>=80?'جيد جداً':r.pct>=70?'جيد':r.pct>=60?'مقبول':'ضعيف';
+    return `<tr><td>${r.studentName}</td><td><span class="badge bb">${r.class}</span></td><td>${r.totalScore}/${r.totalMax}</td><td><span class="badge ${r.pct>=80?'bg':r.pct>=60?'ba':'br2'}">${Math.round(r.pct)}%</span></td><td>${gr}</td></tr>`;
+  }).join('');
+  document.getElementById('results-table').innerHTML=`<table><thead><tr><th>الطالب</th><th>الشعبة</th><th>الدرجة</th><th>النسبة</th><th>التقدير</th></tr></thead><tbody>${rows}</tbody></table>`;
+  const qMap={};
+  recs.forEach(r=>(r.qResults||[]).forEach((q,i)=>{if(!qMap[i])qMap[i]={sc:[],mx:[]};qMap[i].sc.push(q.score);qMap[i].mx.push(q.max);}));
+  document.getElementById('q-perf').innerHTML=Object.values(qMap).map((q,i)=>{
+    const a=Math.round(q.sc.reduce((a,b)=>a+b,0)/q.mx.reduce((a,b)=>a+b,0)*100);
+    return `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px"><span>السؤال ${i+1}</span><span class="badge ${a>=80?'bg':a>=60?'ba':'br2'}">${a}%</span></div><div class="prog-w"><div class="prog" style="width:${a}%;background:${a>=80?'var(--teal)':a>=60?'var(--amber)':'var(--red)'}"></div></div></div>`;
+  }).join('')||'<p style="color:#999;font-size:13px">—</p>';
+}
+
+function importResults() {
+  try{const r=JSON.parse(document.getElementById('results-import').value.trim());DB.results=r;save();renderResults();}
+  catch(e){alert('JSON غير صحيح');}
+}
+
+function exportResultsExcel() {
+  if(!DB.results.length){alert('لا توجد نتائج');return;}
+  const rows=[['الاسم','الشعبة','الاختبار','الدرجة','من','النسبة','التقدير']];
+  DB.results.forEach(r=>{const gr=r.pct>=90?'ممتاز':r.pct>=80?'جيد جداً':r.pct>=70?'جيد':r.pct>=60?'مقبول':'ضعيف';rows.push([r.studentName,r.class,r.examName,r.totalScore,r.totalMax,Math.round(r.pct)+'%',gr]);});
+  const ws=XLSX.utils.aoa_to_sheet(rows);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,'النتائج',ws);XLSX.writeFile(wb,'نتائج_الاختبار.xlsx');
+}
+
+function exportResultsJSON() {
+  const blob=new Blob([JSON.stringify(DB.results,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='نتائج.json';a.click();
+}
+
+function printResults() {
+  const w=window.open('','_blank');
+  w.document.write(`<html dir="rtl"><head><style>body{font-family:Arial;font-size:13px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:6px;text-align:right}th{background:#185FA5;color:#fff}</style></head><body>
+  <h2>كشف نتائج الاختبار — ${new Date().toLocaleDateString('ar')}</h2>
+  <table><thead><tr><th>الاسم</th><th>الشعبة</th><th>الدرجة</th><th>من</th><th>النسبة</th></tr></thead><tbody>
+  ${DB.results.map(r=>`<tr><td>${r.studentName}</td><td>${r.class}</td><td>${r.totalScore}</td><td>${r.totalMax}</td><td>${Math.round(r.pct)}%</td></tr>`).join('')}
+  </tbody></table></body></html>`);w.print();
+}
+
+updateCounts(); renderStudentsTable(); renderQuestions();
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
-// exam-data.js — Auto-generated 5‏/4‏/2026 6:53:31 ص
-window.ANTHROPIC_KEY = "AIzaSyCbBsZLwWHZUl0WqIgKFq9YuEBce7E5YQ8";
-window.SHEET_URL = "https://docs.google.com/spreadsheets/d/1XH8vPoHQZKRmro56WMjli0u5wE4ba6_Q7_wlbBzRO0A/edit?usp=sharing";
+// exam-data.js — Auto-generated 6‏/4‏/2026 12:15:23 ص
+window.ANTHROPIC_KEY = "";
+window.SHEET_URL = "";
 window.EXAM_DATA = {
   "name": "اختبار الرياضيات",
   "duration": 30,
@@ -249,10 +249,10 @@ window.STUDENTS_DATA = {
       "num": "864337"
     },
     {
-      "id": "894423",
-      "name": "اسماعيل عمر محمد حسن",
-      "password": "894423",
-      "num": "894423"
+      "id": "1315224",
+      "name": "ابي عمر يوسف",
+      "password": "1315224",
+      "num": "1315224"
     }
   ],
   "6-2": [
@@ -683,12 +683,6 @@ window.STUDENTS_DATA = {
       "name": "نوره محمد محسن الضباعى",
       "password": "1314949",
       "num": "1314949"
-    },
-    {
-      "id": "1314806",
-      "name": "احمد صلاح بروك العمقى",
-      "password": "1314806",
-      "num": "1314806"
     }
   ]
 };
